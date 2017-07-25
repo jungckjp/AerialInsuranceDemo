@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18630C4A1F17CEE800FF6E70 /* DJIFlightHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 18630C491F17CEE800FF6E70 /* DJIFlightHelpers.m */; };
 		186E028E1F16A57300A24156 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E028D1F16A57300A24156 /* main.m */; };
 		186E02911F16A57300A24156 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02901F16A57300A24156 /* AppDelegate.m */; };
 		186E02941F16A57300A24156 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02931F16A57300A24156 /* ViewController.m */; };
@@ -15,6 +16,9 @@
 		186E029C1F16A57300A24156 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 186E029A1F16A57300A24156 /* LaunchScreen.storyboard */; };
 		186E02A71F16A57300A24156 /* BPDeliveryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02A61F16A57300A24156 /* BPDeliveryTests.m */; };
 		186E02B21F16A57300A24156 /* BPDeliveryUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02B11F16A57300A24156 /* BPDeliveryUITests.m */; };
+		18C02DC51F1FEF6300E69CE6 /* VideoPreviewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */; };
+		18C02DC61F1FEF6300E69CE6 /* VideoPreviewer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E92D6BA15359A3AC4C691FF1 /* libPods-BPDelivery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C50FD4B3ADEAA7A60BCCED /* libPods-BPDelivery.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,9 +36,39 @@
 			remoteGlobalIDString = 186E02881F16A57300A24156;
 			remoteInfo = BPDelivery;
 		};
+		18C02DC31F1FEF3700E69CE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 02A543FD1C3C51CB0083C11B;
+			remoteInfo = VideoPreviewer;
+		};
+		18C02DC71F1FEF6300E69CE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 02A543FC1C3C51CB0083C11B;
+			remoteInfo = VideoPreviewer;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		18C02DC91F1FEF6300E69CE6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				18C02DC61F1FEF6300E69CE6 /* VideoPreviewer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		18630C481F17CEE800FF6E70 /* DJIFlightHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIFlightHelpers.h; sourceTree = "<group>"; };
+		18630C491F17CEE800FF6E70 /* DJIFlightHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJIFlightHelpers.m; sourceTree = "<group>"; };
 		186E02891F16A57300A24156 /* BPDelivery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BPDelivery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		186E028D1F16A57300A24156 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		186E028F1F16A57300A24156 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -51,6 +85,10 @@
 		186E02AD1F16A57300A24156 /* BPDeliveryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BPDeliveryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		186E02B11F16A57300A24156 /* BPDeliveryUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BPDeliveryUITests.m; sourceTree = "<group>"; };
 		186E02B31F16A57300A24156 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VideoPreviewer.xcodeproj; path = VideoPreviewer/VideoPreviewer.xcodeproj; sourceTree = "<group>"; };
+		BB23571170CAC93563CC1C98 /* Pods-BPDelivery.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BPDelivery.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BPDelivery/Pods-BPDelivery.debug.xcconfig"; sourceTree = "<group>"; };
+		C0B7D9A4B3346698B46E45BA /* Pods-BPDelivery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BPDelivery.release.xcconfig"; path = "Pods/Target Support Files/Pods-BPDelivery/Pods-BPDelivery.release.xcconfig"; sourceTree = "<group>"; };
+		C9C50FD4B3ADEAA7A60BCCED /* libPods-BPDelivery.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BPDelivery.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +96,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C02DC51F1FEF6300E69CE6 /* VideoPreviewer.framework in Frameworks */,
+				E92D6BA15359A3AC4C691FF1 /* libPods-BPDelivery.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +118,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		06F9760AD17F5087D354119F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */,
+				C9C50FD4B3ADEAA7A60BCCED /* libPods-BPDelivery.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		18630C471F17CEA300FF6E70 /* DJIHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				18630C481F17CEE800FF6E70 /* DJIFlightHelpers.h */,
+				18630C491F17CEE800FF6E70 /* DJIFlightHelpers.m */,
+			);
+			name = DJIHelpers;
+			sourceTree = "<group>";
+		};
 		186E02801F16A57300A24156 = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +143,8 @@
 				186E02A51F16A57300A24156 /* BPDeliveryTests */,
 				186E02B01F16A57300A24156 /* BPDeliveryUITests */,
 				186E028A1F16A57300A24156 /* Products */,
+				E6E3877DC7F4E7796CD120C0 /* Pods */,
+				06F9760AD17F5087D354119F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,6 +161,7 @@
 		186E028B1F16A57300A24156 /* BPDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				18630C471F17CEA300FF6E70 /* DJIHelpers */,
 				186E028F1F16A57300A24156 /* AppDelegate.h */,
 				186E02901F16A57300A24156 /* AppDelegate.m */,
 				186E02921F16A57300A24156 /* ViewController.h */,
@@ -140,6 +201,23 @@
 			path = BPDeliveryUITests;
 			sourceTree = "<group>";
 		};
+		18C02DC01F1FEF3700E69CE6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E6E3877DC7F4E7796CD120C0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BB23571170CAC93563CC1C98 /* Pods-BPDelivery.debug.xcconfig */,
+				C0B7D9A4B3346698B46E45BA /* Pods-BPDelivery.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -147,13 +225,18 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 186E02B61F16A57300A24156 /* Build configuration list for PBXNativeTarget "BPDelivery" */;
 			buildPhases = (
+				160B45760AEF69B15335C5E3 /* [CP] Check Pods Manifest.lock */,
 				186E02851F16A57300A24156 /* Sources */,
 				186E02861F16A57300A24156 /* Frameworks */,
 				186E02871F16A57300A24156 /* Resources */,
+				D9503C98F54A986DE4D22E7F /* [CP] Embed Pods Frameworks */,
+				3650D55DBB06675BF3622E9A /* [CP] Copy Pods Resources */,
+				18C02DC91F1FEF6300E69CE6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				18C02DC81F1FEF6300E69CE6 /* PBXTargetDependency */,
 			);
 			name = BPDelivery;
 			productName = BPDelivery;
@@ -235,6 +318,12 @@
 			mainGroup = 186E02801F16A57300A24156;
 			productRefGroup = 186E028A1F16A57300A24156 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 18C02DC01F1FEF3700E69CE6 /* Products */;
+					ProjectRef = 18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				186E02881F16A57300A24156 /* BPDelivery */,
@@ -243,6 +332,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = VideoPreviewer.framework;
+			remoteRef = 18C02DC31F1FEF3700E69CE6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		186E02871F16A57300A24156 /* Resources */ = {
@@ -271,12 +370,61 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		160B45760AEF69B15335C5E3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3650D55DBB06675BF3622E9A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BPDelivery/Pods-BPDelivery-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D9503C98F54A986DE4D22E7F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BPDelivery/Pods-BPDelivery-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		186E02851F16A57300A24156 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				186E02941F16A57300A24156 /* ViewController.m in Sources */,
+				18630C4A1F17CEE800FF6E70 /* DJIFlightHelpers.m in Sources */,
 				186E02911F16A57300A24156 /* AppDelegate.m in Sources */,
 				186E028E1F16A57300A24156 /* main.m in Sources */,
 			);
@@ -310,6 +458,11 @@
 			isa = PBXTargetDependency;
 			target = 186E02881F16A57300A24156 /* BPDelivery */;
 			targetProxy = 186E02AE1F16A57300A24156 /* PBXContainerItemProxy */;
+		};
+		18C02DC81F1FEF6300E69CE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VideoPreviewer;
+			targetProxy = 18C02DC71F1FEF6300E69CE6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -427,9 +580,11 @@
 		};
 		186E02B71F16A57300A24156 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB23571170CAC93563CC1C98 /* Pods-BPDelivery.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = CKUW8XW97S;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = BPDelivery/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jungckjp.BPDelivery;
@@ -439,9 +594,11 @@
 		};
 		186E02B81F16A57300A24156 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0B7D9A4B3346698B46E45BA /* Pods-BPDelivery.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = CKUW8XW97S;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = BPDelivery/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jungckjp.BPDelivery;
@@ -518,6 +675,7 @@
 				186E02B81F16A57300A24156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		186E02B91F16A57300A24156 /* Build configuration list for PBXNativeTarget "BPDeliveryTests" */ = {
 			isa = XCConfigurationList;
@@ -526,6 +684,7 @@
 				186E02BB1F16A57300A24156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		186E02BC1F16A57300A24156 /* Build configuration list for PBXNativeTarget "BPDeliveryUITests" */ = {
 			isa = XCConfigurationList;
@@ -534,6 +693,7 @@
 				186E02BE1F16A57300A24156 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -18,8 +18,19 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>DJISDKAppKey</key>
+	<string>c72b8e07c1dab7484f1d3f4b</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>DJI SDK uses location for drone flight.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Camera Roll is accessed to upload drone image.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -27,6 +38,12 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+	</array>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<array>
+		<string>com.dji.video</string>
+		<string>com.dji.protocol</string>
+		<string>com.dji.common</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

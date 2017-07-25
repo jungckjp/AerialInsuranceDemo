@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <DJISDK/DJISDK.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController {
+    DJIFlightController* flightController;
+    DJIGimbal* gimbal;
+}
 
 
 @end
