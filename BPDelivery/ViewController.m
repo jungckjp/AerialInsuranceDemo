@@ -20,7 +20,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *productConnectionStatus;
 @property (weak, nonatomic) IBOutlet UILabel *productModel;
 @property (weak, nonatomic) IBOutlet UISwitch *restEnabledSwitch;
-@property (strong, nonatomic) UIAlertView* statusAlertView;
+
+@property (weak, nonatomic) NSString* pid;
+
 @property (strong, nonatomic) DJICameraSystemState* cameraSystemState;
 @property (strong, nonatomic) DJICameraPlaybackState* cameraPlaybackState;
 
@@ -176,7 +178,7 @@
 -(void) camera:(DJICamera*)camera didUpdateSystemState:(DJICameraSystemState*)systemState
 {
     self.cameraSystemState = systemState;
-    BOOL isPlayback = (systemState.mode == DJICameraModePlayback) || (systemState.mode == DJICameraModeMediaDownload);
+    //BOOL isPlayback = (systemState.mode == DJICameraModePlayback) || (systemState.mode == DJICameraModeMediaDownload);
     
 }
 
@@ -209,6 +211,9 @@
                 [self showAlertViewWithTitle:@"Error" withMessage:@"Landing failed."];
             } else {
                 //[self uploadPhoto];
+                //TODO TEST
+                
+                
             }
         }];
     } else {
@@ -218,13 +223,13 @@
 }
 
 - (IBAction)takePicturePressed:(UIButton *)sender {
-    [self moveCameraDown];
+    // to do
 }
 
 -(void) moveCameraDown {
     gimbal = [DJIFlightHelpers fetchGimbal];
     if (gimbal) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@-45.0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
             [gimbal rotateWithRotation:gimbalRotation completion:^(NSError * _Nullable error) {
                 if (error) {
@@ -243,6 +248,7 @@
     gimbal = [DJIFlightHelpers fetchGimbal];
     if (gimbal) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self downloadButtonAction:nil];
             DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
             [gimbal rotateWithRotation:gimbalRotation completion:^(NSError * _Nullable error) {
                 if (error) {
@@ -324,14 +330,14 @@
         
         [self stopTimer];
         //[self.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
-        [self updateStatusAlertContentWithTitle:@"Download Error" message:[NSString stringWithFormat:@"%@", self.downloadImageError] shouldDismissAfterDelay:YES];
+        //[self updateStatusAlertContentWithTitle:@"Download Error" message:[NSString stringWithFormat:@"%@", self.downloadImageError] shouldDismissAfterDelay:YES];
         
     }
     else
     {
         NSString *title = [NSString stringWithFormat:@"Download (%d/%d)", self.downloadedFileCount + 1, self.selectedFileCount];
         NSString *message = [NSString stringWithFormat:@"FileName:%@, FileSize:%0.1fKB, Downloaded:%0.1fKB", self.targetFileName, self.totalFileSize / 1024.0, self.currentDownloadSize / 1024.0];
-        [self updateStatusAlertContentWithTitle:title message:message shouldDismissAfterDelay:NO];
+        //[self updateStatusAlertContentWithTitle:title message:message shouldDismissAfterDelay:NO];
     }
     
 }
@@ -342,8 +348,8 @@
     if (self.cameraPlaybackState.playbackMode == DJICameraPlaybackModeMultipleFilesEdit) {
         
         if (self.selectedFileCount == 0) {
-            [self showStatusAlertView];
-            [self updateStatusAlertContentWithTitle:@"Please select files to Download!" message:@"" shouldDismissAfterDelay:YES];
+            /*[self showStatusAlertView];
+            [self updateStatusAlertContentWithTitle:@"Please select files to Download!" message:@"" shouldDismissAfterDelay:YES];*/
             return;
         }else
         {
@@ -412,6 +418,8 @@
                     if (error) {
                         NSLog(@"Error, %@", error.description);
                     }
+                    //TODO TEST
+                    [self confirmLanding];
                 }];
             }
         }
@@ -445,32 +453,6 @@
     
 }
 
--(void) showStatusAlertView
-{
-    if (self.statusAlertView == nil) {
-        self.statusAlertView = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-        [self.statusAlertView show];
-    }
-}
--(void) dismissStatusAlertView
-{
-    if (self.statusAlertView) {
-        [self.statusAlertView dismissWithClickedButtonIndex:0 animated:YES];
-        self.statusAlertView = nil;
-    }
-}
-- (void)updateStatusAlertContentWithTitle:(NSString *)title message:(NSString *)message shouldDismissAfterDelay:(BOOL)dismiss
-{
-    if (self.statusAlertView) {
-        [self.statusAlertView setTitle:title];
-        [self.statusAlertView setMessage:message];
-        
-        if (dismiss) {
-            [self performSelector:@selector(dismissStatusAlertView) withObject:nil afterDelay:2.0];
-        }
-    }
-}
-
 #pragma mark - REST Controller
 - (void) initializeTimer {
     if (!self.timer) {
@@ -489,29 +471,31 @@
     // REST HERE
     NSURL *url = [NSURL URLWithString:@"http://localhost:8080/flightStatus"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         if (data.length > 0 && connectionError == nil) {
             NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
             NSString *responseString = [response objectForKey:@"takeoff"];
             if (![responseString isEqualToString:@"HOLD"]) {
+                NSLog([response objectForKey:@"takeoff"]);
+                self.pid = [response objectForKey:@"takeoff"];
                 NSLog(@"TAKE OFF!");
                 [self.restEnabledSwitch setOn:NO];
                 [self restSwitchChanged:self.restEnabledSwitch];
                 [self takeOffButtonPressed:nil];
                 NSURL *url = [NSURL URLWithString:@"http://localhost:8080/confirmed"];
                 NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                #pragma clang diagnostic push
-                #pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
-                #pragma clang diagnostic pop
             }
         }
     }];
-    #pragma clang diagnostic pop
     
     NSLog(@"REST Timer Fired");
+}
+
+-(void) confirmLanding {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://localhost:8080/landingConfirmed/%@", self.pid]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
 }
 
 - (IBAction)restSwitchChanged:(UISwitch *)sender {

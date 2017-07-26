@@ -18,6 +18,7 @@
 		186E02B21F16A57300A24156 /* BPDeliveryUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02B11F16A57300A24156 /* BPDeliveryUITests.m */; };
 		18C02DC51F1FEF6300E69CE6 /* VideoPreviewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */; };
 		18C02DC61F1FEF6300E69CE6 /* VideoPreviewer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		18DACAB31F27A24B007A3473 /* DJIFlightControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DACAB21F27A24B007A3473 /* DJIFlightControls.m */; };
 		E92D6BA15359A3AC4C691FF1 /* libPods-BPDelivery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C50FD4B3ADEAA7A60BCCED /* libPods-BPDelivery.a */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +87,8 @@
 		186E02B11F16A57300A24156 /* BPDeliveryUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BPDeliveryUITests.m; sourceTree = "<group>"; };
 		186E02B31F16A57300A24156 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VideoPreviewer.xcodeproj; path = VideoPreviewer/VideoPreviewer.xcodeproj; sourceTree = "<group>"; };
+		18DACAB11F27A24B007A3473 /* DJIFlightControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIFlightControls.h; sourceTree = "<group>"; };
+		18DACAB21F27A24B007A3473 /* DJIFlightControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJIFlightControls.m; sourceTree = "<group>"; };
 		BB23571170CAC93563CC1C98 /* Pods-BPDelivery.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BPDelivery.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BPDelivery/Pods-BPDelivery.debug.xcconfig"; sourceTree = "<group>"; };
 		C0B7D9A4B3346698B46E45BA /* Pods-BPDelivery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BPDelivery.release.xcconfig"; path = "Pods/Target Support Files/Pods-BPDelivery/Pods-BPDelivery.release.xcconfig"; sourceTree = "<group>"; };
 		C9C50FD4B3ADEAA7A60BCCED /* libPods-BPDelivery.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BPDelivery.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +135,8 @@
 			children = (
 				18630C481F17CEE800FF6E70 /* DJIFlightHelpers.h */,
 				18630C491F17CEE800FF6E70 /* DJIFlightHelpers.m */,
+				18DACAB11F27A24B007A3473 /* DJIFlightControls.h */,
+				18DACAB21F27A24B007A3473 /* DJIFlightControls.m */,
 			);
 			name = DJIHelpers;
 			sourceTree = "<group>";
@@ -427,6 +432,7 @@
 				18630C4A1F17CEE800FF6E70 /* DJIFlightHelpers.m in Sources */,
 				186E02911F16A57300A24156 /* AppDelegate.m in Sources */,
 				186E028E1F16A57300A24156 /* main.m in Sources */,
+				18DACAB31F27A24B007A3473 /* DJIFlightControls.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
