@@ -10,6 +10,7 @@
 #import "DJIFlightHelpers.h"
 #import <VideoPreviewer/VideoPreviewer.h>
 #import <Photos/Photos.h>
+#include "TargetConditionals.h"
 
 @interface ViewController () <DJISDKManagerDelegate, DJICameraDelegate, DJIVideoFeedListener, DJIBaseProductDelegate, DJIPlaybackDelegate>
 
@@ -20,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *productConnectionStatus;
 @property (weak, nonatomic) IBOutlet UILabel *productModel;
 @property (weak, nonatomic) IBOutlet UISwitch *restEnabledSwitch;
+@property (weak, nonatomic) IBOutlet UIView *sectionHeaderView;
 
 @property (weak, nonatomic) NSString* pid;
 
@@ -53,7 +55,7 @@
     
     [[VideoPreviewer instance] setView:self.fpvPreviewView];
     [self registerApp];
-    //[self saveImageToServer];
+    [self roundCornersOnView:self.sectionHeaderView onTopLeft:YES topRight:YES bottomLeft:NO bottomRight:NO radius:5];
 }
 
 -(void) viewWillDisappear:(BOOL)animated {
@@ -66,6 +68,26 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (UIView *)roundCornersOnView:(UIView *)view onTopLeft:(BOOL)tl topRight:(BOOL)tr bottomLeft:(BOOL)bl bottomRight:(BOOL)br radius:(float)radius
+{
+    if (tl || tr || bl || br) {
+        UIRectCorner corner = 0;
+        if (tl) corner = corner | UIRectCornerTopLeft;
+        if (tr) corner = corner | UIRectCornerTopRight;
+        if (bl) corner = corner | UIRectCornerBottomLeft;
+        if (br) corner = corner | UIRectCornerBottomRight;
+        
+        UIView *roundedView = view;
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:roundedView.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(radius, radius)];
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = roundedView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        roundedView.layer.mask = maskLayer;
+        return roundedView;
+    }
+    return view;
 }
 
 #pragma mark - DJI SDK
@@ -84,8 +106,10 @@
     if (error) {
         message = @"App registration failed. API key configured incorrectly, or network not available.";
     } else {
-        // Debug Only
+    #if (TARGET_OS_SIMULATOR)
         [DJISDKManager enableBridgeModeWithBridgeAppIP:@"192.168.0.4"];
+        NSLog(@"Debug Bridge Mode Enabled");
+    #endif
         NSLog(@"registerAppSuccess");
     }
     
@@ -189,12 +213,18 @@
 
 #pragma mark - UI
 - (IBAction)takeOffButtonPressed:(UIButton *)sender {
+    [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.36 green:0.72 blue:0.36 alpha:1.0]];
+    [self.takeOffButton setTitle:@"Taking Off" forState:UIControlStateNormal];
     flightController = [DJIFlightHelpers fetchFlightController];
     if (flightController) {
         [flightController startTakeoffWithCompletion:^(NSError * _Nullable error) {
             if (error) {
+                [self resetTakeoffButton];
                 [self showAlertViewWithTitle:@"Error" withMessage:@"Takeoff failed."];
+                
             } else {
+                [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.85 green:0.33 blue:0.31 alpha:1.0]];
+                [self.takeOffButton setTitle:@"Land" forState:UIControlStateNormal];
                 [self moveCameraDown];
             }
         }];
@@ -212,14 +242,18 @@
             } else {
                 //[self uploadPhoto];
                 //TODO TEST
-                
-                
+                [self resetTakeoffButton];
             }
         }];
     } else {
         [self showAlertViewWithTitle:@"Error" withMessage:@"Flight Controller not found."];
     }
     
+}
+
+- (void) resetTakeoffButton {
+    [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.96 green:0.47 blue:0.13 alpha:1.0]];
+    [self.takeOffButton setTitle:@"Manual Start" forState:UIControlStateNormal];
 }
 
 - (IBAction)takePicturePressed:(UIButton *)sender {
@@ -469,7 +503,7 @@
 
 -(void) tick {
     // REST HERE
-    NSURL *url = [NSURL URLWithString:@"http://localhost:8080/flightStatus"];
+    NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/flightStatus"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         if (data.length > 0 && connectionError == nil) {
@@ -482,7 +516,7 @@
                 [self.restEnabledSwitch setOn:NO];
                 [self restSwitchChanged:self.restEnabledSwitch];
                 [self takeOffButtonPressed:nil];
-                NSURL *url = [NSURL URLWithString:@"http://localhost:8080/confirmed"];
+                NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/confirmed"];
                 NSURLRequest *request = [NSURLRequest requestWithURL:url];
                 [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
             }
@@ -493,7 +527,7 @@
 }
 
 -(void) confirmLanding {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://localhost:8080/landingConfirmed/%@", self.pid]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://flight-services.bp-3cloud.com/landingConfirmed/%@", self.pid]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
 }
@@ -522,7 +556,7 @@
             NSData *dataImage = UIImageJPEGRepresentation(downloadImage, 100.0f);
             [[self droneImage] setImage:downloadImage];
             // set your URL Where to Upload Image
-            NSString *urlString = @"http://localhost:8080/img";
+            NSString *urlString = @"https://flight-services.bp-3cloud.com/img";
             
             // set your Image Name
             NSString *filename = @"INSPECTIONIMG1";
