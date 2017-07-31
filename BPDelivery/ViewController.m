@@ -10,6 +10,7 @@
 #import "DJIFlightHelpers.h"
 #import <VideoPreviewer/VideoPreviewer.h>
 #import <Photos/Photos.h>
+#include "TargetConditionals.h"
 
 @interface ViewController () <DJISDKManagerDelegate, DJICameraDelegate, DJIVideoFeedListener, DJIBaseProductDelegate, DJIPlaybackDelegate>
 
@@ -20,7 +21,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *productConnectionStatus;
 @property (weak, nonatomic) IBOutlet UILabel *productModel;
 @property (weak, nonatomic) IBOutlet UISwitch *restEnabledSwitch;
-@property (strong, nonatomic) UIAlertView* statusAlertView;
+@property (weak, nonatomic) IBOutlet UIView *sectionHeaderView;
+
+@property (weak, nonatomic) NSString* pid;
+
 @property (strong, nonatomic) DJICameraSystemState* cameraSystemState;
 @property (strong, nonatomic) DJICameraPlaybackState* cameraPlaybackState;
 
@@ -51,7 +55,7 @@
     
     [[VideoPreviewer instance] setView:self.fpvPreviewView];
     [self registerApp];
-    //[self saveImageToServer];
+    [self roundCornersOnView:self.sectionHeaderView onTopLeft:YES topRight:YES bottomLeft:NO bottomRight:NO radius:5];
 }
 
 -(void) viewWillDisappear:(BOOL)animated {
@@ -64,6 +68,26 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (UIView *)roundCornersOnView:(UIView *)view onTopLeft:(BOOL)tl topRight:(BOOL)tr bottomLeft:(BOOL)bl bottomRight:(BOOL)br radius:(float)radius
+{
+    if (tl || tr || bl || br) {
+        UIRectCorner corner = 0;
+        if (tl) corner = corner | UIRectCornerTopLeft;
+        if (tr) corner = corner | UIRectCornerTopRight;
+        if (bl) corner = corner | UIRectCornerBottomLeft;
+        if (br) corner = corner | UIRectCornerBottomRight;
+        
+        UIView *roundedView = view;
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:roundedView.bounds byRoundingCorners:corner cornerRadii:CGSizeMake(radius, radius)];
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = roundedView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        roundedView.layer.mask = maskLayer;
+        return roundedView;
+    }
+    return view;
 }
 
 #pragma mark - DJI SDK
@@ -82,8 +106,10 @@
     if (error) {
         message = @"App registration failed. API key configured incorrectly, or network not available.";
     } else {
-        // Debug Only
+    #if (TARGET_OS_SIMULATOR)
         [DJISDKManager enableBridgeModeWithBridgeAppIP:@"192.168.0.4"];
+        NSLog(@"Debug Bridge Mode Enabled");
+    #endif
         NSLog(@"registerAppSuccess");
     }
     
@@ -176,7 +202,7 @@
 -(void) camera:(DJICamera*)camera didUpdateSystemState:(DJICameraSystemState*)systemState
 {
     self.cameraSystemState = systemState;
-    BOOL isPlayback = (systemState.mode == DJICameraModePlayback) || (systemState.mode == DJICameraModeMediaDownload);
+    //BOOL isPlayback = (systemState.mode == DJICameraModePlayback) || (systemState.mode == DJICameraModeMediaDownload);
     
 }
 
@@ -187,12 +213,18 @@
 
 #pragma mark - UI
 - (IBAction)takeOffButtonPressed:(UIButton *)sender {
+    [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.36 green:0.72 blue:0.36 alpha:1.0]];
+    [self.takeOffButton setTitle:@"Taking Off" forState:UIControlStateNormal];
     flightController = [DJIFlightHelpers fetchFlightController];
     if (flightController) {
         [flightController startTakeoffWithCompletion:^(NSError * _Nullable error) {
             if (error) {
+                [self resetTakeoffButton];
                 [self showAlertViewWithTitle:@"Error" withMessage:@"Takeoff failed."];
+                
             } else {
+                [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.85 green:0.33 blue:0.31 alpha:1.0]];
+                [self.takeOffButton setTitle:@"Land" forState:UIControlStateNormal];
                 [self moveCameraDown];
             }
         }];
@@ -209,6 +241,8 @@
                 [self showAlertViewWithTitle:@"Error" withMessage:@"Landing failed."];
             } else {
                 //[self uploadPhoto];
+                //TODO TEST
+                [self resetTakeoffButton];
             }
         }];
     } else {
@@ -217,14 +251,19 @@
     
 }
 
+- (void) resetTakeoffButton {
+    [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.96 green:0.47 blue:0.13 alpha:1.0]];
+    [self.takeOffButton setTitle:@"Manual Start" forState:UIControlStateNormal];
+}
+
 - (IBAction)takePicturePressed:(UIButton *)sender {
-    [self moveCameraDown];
+    // to do
 }
 
 -(void) moveCameraDown {
     gimbal = [DJIFlightHelpers fetchGimbal];
     if (gimbal) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@-45.0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
             [gimbal rotateWithRotation:gimbalRotation completion:^(NSError * _Nullable error) {
                 if (error) {
@@ -243,6 +282,7 @@
     gimbal = [DJIFlightHelpers fetchGimbal];
     if (gimbal) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self downloadButtonAction:nil];
             DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
             [gimbal rotateWithRotation:gimbalRotation completion:^(NSError * _Nullable error) {
                 if (error) {
@@ -324,14 +364,14 @@
         
         [self stopTimer];
         //[self.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
-        [self updateStatusAlertContentWithTitle:@"Download Error" message:[NSString stringWithFormat:@"%@", self.downloadImageError] shouldDismissAfterDelay:YES];
+        //[self updateStatusAlertContentWithTitle:@"Download Error" message:[NSString stringWithFormat:@"%@", self.downloadImageError] shouldDismissAfterDelay:YES];
         
     }
     else
     {
         NSString *title = [NSString stringWithFormat:@"Download (%d/%d)", self.downloadedFileCount + 1, self.selectedFileCount];
         NSString *message = [NSString stringWithFormat:@"FileName:%@, FileSize:%0.1fKB, Downloaded:%0.1fKB", self.targetFileName, self.totalFileSize / 1024.0, self.currentDownloadSize / 1024.0];
-        [self updateStatusAlertContentWithTitle:title message:message shouldDismissAfterDelay:NO];
+        //[self updateStatusAlertContentWithTitle:title message:message shouldDismissAfterDelay:NO];
     }
     
 }
@@ -342,8 +382,8 @@
     if (self.cameraPlaybackState.playbackMode == DJICameraPlaybackModeMultipleFilesEdit) {
         
         if (self.selectedFileCount == 0) {
-            [self showStatusAlertView];
-            [self updateStatusAlertContentWithTitle:@"Please select files to Download!" message:@"" shouldDismissAfterDelay:YES];
+            /*[self showStatusAlertView];
+            [self updateStatusAlertContentWithTitle:@"Please select files to Download!" message:@"" shouldDismissAfterDelay:YES];*/
             return;
         }else
         {
@@ -412,6 +452,8 @@
                     if (error) {
                         NSLog(@"Error, %@", error.description);
                     }
+                    //TODO TEST
+                    [self confirmLanding];
                 }];
             }
         }
@@ -445,32 +487,6 @@
     
 }
 
--(void) showStatusAlertView
-{
-    if (self.statusAlertView == nil) {
-        self.statusAlertView = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-        [self.statusAlertView show];
-    }
-}
--(void) dismissStatusAlertView
-{
-    if (self.statusAlertView) {
-        [self.statusAlertView dismissWithClickedButtonIndex:0 animated:YES];
-        self.statusAlertView = nil;
-    }
-}
-- (void)updateStatusAlertContentWithTitle:(NSString *)title message:(NSString *)message shouldDismissAfterDelay:(BOOL)dismiss
-{
-    if (self.statusAlertView) {
-        [self.statusAlertView setTitle:title];
-        [self.statusAlertView setMessage:message];
-        
-        if (dismiss) {
-            [self performSelector:@selector(dismissStatusAlertView) withObject:nil afterDelay:2.0];
-        }
-    }
-}
-
 #pragma mark - REST Controller
 - (void) initializeTimer {
     if (!self.timer) {
@@ -487,31 +503,33 @@
 
 -(void) tick {
     // REST HERE
-    NSURL *url = [NSURL URLWithString:@"http://localhost:8080/flightStatus"];
+    NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/flightStatus"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         if (data.length > 0 && connectionError == nil) {
             NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
             NSString *responseString = [response objectForKey:@"takeoff"];
             if (![responseString isEqualToString:@"HOLD"]) {
+                NSLog([response objectForKey:@"takeoff"]);
+                self.pid = [response objectForKey:@"takeoff"];
                 NSLog(@"TAKE OFF!");
                 [self.restEnabledSwitch setOn:NO];
                 [self restSwitchChanged:self.restEnabledSwitch];
                 [self takeOffButtonPressed:nil];
-                NSURL *url = [NSURL URLWithString:@"http://localhost:8080/confirmed"];
+                NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/confirmed"];
                 NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                #pragma clang diagnostic push
-                #pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
-                #pragma clang diagnostic pop
             }
         }
     }];
-    #pragma clang diagnostic pop
     
     NSLog(@"REST Timer Fired");
+}
+
+-(void) confirmLanding {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://flight-services.bp-3cloud.com/landingConfirmed/%@", self.pid]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
 }
 
 - (IBAction)restSwitchChanged:(UISwitch *)sender {
@@ -538,7 +556,7 @@
             NSData *dataImage = UIImageJPEGRepresentation(downloadImage, 100.0f);
             [[self droneImage] setImage:downloadImage];
             // set your URL Where to Upload Image
-            NSString *urlString = @"http://localhost:8080/img";
+            NSString *urlString = @"https://flight-services.bp-3cloud.com/img";
             
             // set your Image Name
             NSString *filename = @"INSPECTIONIMG1";
