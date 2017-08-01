@@ -10,7 +10,6 @@
 #import "DJIFlightHelpers.h"
 #import <VideoPreviewer/VideoPreviewer.h>
 #import <Photos/Photos.h>
-#include "TargetConditionals.h"
 
 @interface ViewController () <DJISDKManagerDelegate, DJICameraDelegate, DJIVideoFeedListener, DJIBaseProductDelegate, DJIPlaybackDelegate>
 
@@ -60,9 +59,6 @@
 
 -(void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    //TODO: Remove later if this works
-//    [[VideoPreviewer instance] setView:nil];
-//    [[DJISDKManager videoFeeder].primaryVideoFeed removeListener:self];
     [self resetVideoPreview];
 }
 
@@ -263,7 +259,8 @@
 -(void) moveCameraDown {
     gimbal = [DJIFlightHelpers fetchGimbal];
     if (gimbal) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // TODO changed to 3
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@-45.0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
             [gimbal rotateWithRotation:gimbalRotation completion:^(NSError * _Nullable error) {
                 if (error) {
@@ -323,57 +320,6 @@
 
 - (IBAction)refreshButtonPressed:(UIButton *)sender {
     flightController = [DJIFlightHelpers fetchFlightController];
-    /*if (flightController) {
-        [flightController getMaxFlightHeightWithCompletion:^(float height, NSError * _Nullable error) {
-            _maxHeight.text = [NSString stringWithFormat:@"Maximum Height: %.1fm", height];
-        }];
-        [flightController getMaxFlightRadiusWithCompletion:^(float radius, NSError * _Nullable error) {
-            _maxRadius.text = [NSString stringWithFormat:@"Maximum Radius: %.1fm", radius];
-        }];
-    }*/
-}
-
-- (void) getData {
-    DJICamera* camera = [DJIFlightHelpers fetchCamera];
-    if (camera != nil) {
-        [camera setMode:DJICameraModeMediaDownload withCompletion:^(NSError * _Nullable error) {
-            if (error) {
-                [self showAlertViewWithTitle:@"Camera Error" withMessage:error.description];
-            }
-        }];
-    }
-}
-
--(void) initData {
-    self.downloadedImageData = [NSMutableData data];
-}
-
-- (void)resetDownloadData
-{
-    self.downloadImageError = nil;
-    self.totalFileSize = 0;
-    self.currentDownloadSize = 0;
-    self.downloadedFileCount = 0;
-    
-    [self.downloadedImageData setData:[NSData dataWithBytes:NULL length:0]];
-}
-
-- (void)updateDownloadProgress:(NSTimer *)updatedTimer
-{
-    if (self.downloadImageError) {
-        
-        [self stopTimer];
-        //[self.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
-        //[self updateStatusAlertContentWithTitle:@"Download Error" message:[NSString stringWithFormat:@"%@", self.downloadImageError] shouldDismissAfterDelay:YES];
-        
-    }
-    else
-    {
-        NSString *title = [NSString stringWithFormat:@"Download (%d/%d)", self.downloadedFileCount + 1, self.selectedFileCount];
-        NSString *message = [NSString stringWithFormat:@"FileName:%@, FileSize:%0.1fKB, Downloaded:%0.1fKB", self.targetFileName, self.totalFileSize / 1024.0, self.currentDownloadSize / 1024.0];
-        //[self updateStatusAlertContentWithTitle:title message:message shouldDismissAfterDelay:NO];
-    }
-    
 }
 
 - (IBAction)downloadButtonAction:(UIButton *)sender {
@@ -459,20 +405,6 @@
         }
     }];
     [camera.mediaManager.taskScheduler moveTaskToEnd:task];
-}
-
-- (void)startUpdateTimer
-{
-    if (self.updateImageDownloadTimer == nil) {
-        self.updateImageDownloadTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateDownloadProgress:) userInfo:nil repeats:YES];
-    }
-}
-- (void)stopTimer
-{
-    if (self.updateImageDownloadTimer != nil) {
-        [self.updateImageDownloadTimer invalidate];
-        self.updateImageDownloadTimer = nil;
-    }
 }
 
 #pragma mark - UI helpers
