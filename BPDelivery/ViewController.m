@@ -241,6 +241,7 @@
                 [self resetTakeoffButton];
             }
         }];
+        
     } else {
         [self showAlertViewWithTitle:@"Error" withMessage:@"Flight Controller not found."];
     }
@@ -432,10 +433,10 @@
     }
 }
 
-
 -(void) tick {
     // REST HERE
-    NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/flightStatus"];
+    /*
+    NSURL *url = [NSURL URLWithString:@"https://flight-services.driven2017.bp-3cloud.com/flightStatus"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
         if (data.length > 0 && connectionError == nil) {
@@ -448,12 +449,38 @@
                 [self.restEnabledSwitch setOn:NO];
                 [self restSwitchChanged:self.restEnabledSwitch];
                 [self takeOffButtonPressed:nil];
-                NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/confirmed"];
+                NSURL *url = [NSURL URLWithString:@"https://flight-services.driven2017.bp-3cloud.com/confirmed"];
                 NSURLRequest *request = [NSURLRequest requestWithURL:url];
                 [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
             }
         }
     }];
+     */
+    NSString *dataUrl = @"https://flight-services.bp-3cloud.com/flightStatus";
+    NSURL *url = [NSURL URLWithString:dataUrl];
+    
+    // 2
+    NSURLSessionDataTask *downloadTask = [[NSURLSession sharedSession]
+                                          dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                              // 4: Handle response here
+                                              if (data.length > 0 && error == nil) {
+                                                  NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                                                  NSString *responseString = [response objectForKey:@"takeoff"];
+                                                  if (![responseString isEqualToString:@"HOLD"]) {
+                                                      NSLog(@"%@", [response objectForKey:@"takeoff"]);
+                                                      self.pid = [response objectForKey:@"takeoff"];
+                                                      NSLog(@"TAKE OFF!");
+                                                      [self.restEnabledSwitch setOn:NO];
+                                                      [self restSwitchChanged:self.restEnabledSwitch];
+                                                      [self takeOffButtonPressed:nil];
+                                                      NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/confirmed"];
+                                                      NSURLRequest *request = [NSURLRequest requestWithURL:url];
+                                                      [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
+                                                  }
+                                              }
+
+                                          }];
+    [downloadTask resume];
     
     NSLog(@"REST Timer Fired");
 }
