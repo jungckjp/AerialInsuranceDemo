@@ -16,6 +16,7 @@
 		186E029C1F16A57300A24156 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 186E029A1F16A57300A24156 /* LaunchScreen.storyboard */; };
 		186E02A71F16A57300A24156 /* BPDeliveryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02A61F16A57300A24156 /* BPDeliveryTests.m */; };
 		186E02B21F16A57300A24156 /* BPDeliveryUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 186E02B11F16A57300A24156 /* BPDeliveryUITests.m */; };
+		188A93131F3E746000541347 /* Stripes.png in Resources */ = {isa = PBXBuildFile; fileRef = 188A93121F3E746000541347 /* Stripes.png */; };
 		18C02DC51F1FEF6300E69CE6 /* VideoPreviewer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */; };
 		18C02DC61F1FEF6300E69CE6 /* VideoPreviewer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18C02DC41F1FEF3700E69CE6 /* VideoPreviewer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		18DACAB31F27A24B007A3473 /* DJIFlightControls.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DACAB21F27A24B007A3473 /* DJIFlightControls.m */; };
@@ -86,6 +87,7 @@
 		186E02AD1F16A57300A24156 /* BPDeliveryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BPDeliveryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		186E02B11F16A57300A24156 /* BPDeliveryUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BPDeliveryUITests.m; sourceTree = "<group>"; };
 		186E02B31F16A57300A24156 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		188A93121F3E746000541347 /* Stripes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Stripes.png; sourceTree = "<group>"; };
 		18C02DBF1F1FEF3700E69CE6 /* VideoPreviewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VideoPreviewer.xcodeproj; path = VideoPreviewer/VideoPreviewer.xcodeproj; sourceTree = "<group>"; };
 		18DACAB11F27A24B007A3473 /* DJIFlightControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIFlightControls.h; sourceTree = "<group>"; };
 		18DACAB21F27A24B007A3473 /* DJIFlightControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJIFlightControls.m; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 		186E028C1F16A57300A24156 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				188A93121F3E746000541347 /* Stripes.png */,
 				186E028D1F16A57300A24156 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -353,6 +356,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				188A93131F3E746000541347 /* Stripes.png in Resources */,
 				186E029C1F16A57300A24156 /* LaunchScreen.storyboard in Resources */,
 				186E02991F16A57300A24156 /* Assets.xcassets in Resources */,
 				186E02971F16A57300A24156 /* Main.storyboard in Resources */,

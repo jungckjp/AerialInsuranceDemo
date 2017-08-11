@@ -211,6 +211,7 @@
 - (IBAction)takeOffButtonPressed:(UIButton *)sender {
     [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.36 green:0.72 blue:0.36 alpha:1.0]];
     [self.takeOffButton setTitle:@"Taking Off" forState:UIControlStateNormal];
+
     flightController = [DJIFlightHelpers fetchFlightController];
     if (flightController) {
         [flightController startTakeoffWithCompletion:^(NSError * _Nullable error) {
@@ -219,8 +220,10 @@
                 [self showAlertViewWithTitle:@"Error" withMessage:@"Takeoff failed."];
                 
             } else {
-                [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.85 green:0.33 blue:0.31 alpha:1.0]];
-                [self.takeOffButton setTitle:@"Land" forState:UIControlStateNormal];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.85 green:0.33 blue:0.31 alpha:1.0]];
+                    [self.takeOffButton setTitle:@"Land" forState:UIControlStateNormal];
+                });
                 [self moveCameraDown];
             }
         }];
@@ -249,8 +252,10 @@
 }
 
 - (void) resetTakeoffButton {
-    [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.96 green:0.47 blue:0.13 alpha:1.0]];
-    [self.takeOffButton setTitle:@"Manual Start" forState:UIControlStateNormal];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.takeOffButton setBackgroundColor:[UIColor colorWithRed:0.96 green:0.47 blue:0.13 alpha:1.0]];
+        [self.takeOffButton setTitle:@"Manual Start" forState:UIControlStateNormal];
+    });
 }
 
 - (IBAction)takePicturePressed:(UIButton *)sender {
@@ -414,7 +419,9 @@
  */
 - (void)showAlertViewWithTitle:(NSString* )title withMessage:(NSString*)message {
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self resetTakeoffButton];
+    }];
     [alert addAction:okAction];
     [self presentViewController:alert animated:YES completion:nil];
     
