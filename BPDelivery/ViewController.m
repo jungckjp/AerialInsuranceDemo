@@ -266,8 +266,8 @@
     gimbal = [DJIFlightHelpers fetchGimbal];
     if (gimbal) {
         // TODO changed to 3
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@-45.0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            DJIGimbalRotation * gimbalRotation = [DJIGimbalRotation gimbalRotationWithPitchValue:@-60.0 rollValue:0 yawValue:0 time:5 mode:DJIGimbalRotationModeAbsoluteAngle];
             [gimbal rotateWithRotation:gimbalRotation completion:^(NSError * _Nullable error) {
                 if (error) {
                     [self showAlertViewWithTitle:@"Error" withMessage:@"Gimbal error."];
@@ -291,7 +291,7 @@
                 if (error) {
                     [self showAlertViewWithTitle:@"Error" withMessage:@"Gimbal error."];
                 } else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self landButtonPressed:nil];
                     });
                 }
@@ -357,7 +357,8 @@
 
 
 -(void)loadMediaListsForMediaDownloadMode {
-    DJICamera *camera = [DJIFlightHelpers fetchCamera];
+    // TODO was just camera (not __weak)... if it doesn't work
+    __weak DJICamera *camera = [DJIFlightHelpers fetchCamera];
     [camera setMode:DJICameraModeMediaDownload withCompletion:^(NSError * _Nullable error) {
         //[self showDownloadProgressAlert];
         //[self.downloadProgressAlert setTitle:[NSString stringWithFormat:@"Refreshing file list. "]];
@@ -442,27 +443,6 @@
 
 -(void) tick {
     // REST HERE
-    /*
-    NSURL *url = [NSURL URLWithString:@"https://flight-services.driven2017.bp-3cloud.com/flightStatus"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-        if (data.length > 0 && connectionError == nil) {
-            NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
-            NSString *responseString = [response objectForKey:@"takeoff"];
-            if (![responseString isEqualToString:@"HOLD"]) {
-                NSLog([response objectForKey:@"takeoff"]);
-                self.pid = [response objectForKey:@"takeoff"];
-                NSLog(@"TAKE OFF!");
-                [self.restEnabledSwitch setOn:NO];
-                [self restSwitchChanged:self.restEnabledSwitch];
-                [self takeOffButtonPressed:nil];
-                NSURL *url = [NSURL URLWithString:@"https://flight-services.driven2017.bp-3cloud.com/confirmed"];
-                NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
-            }
-        }
-    }];
-     */
     NSString *dataUrl = @"https://flight-services.bp-3cloud.com/flightStatus";
     NSURL *url = [NSURL URLWithString:dataUrl];
     
@@ -481,8 +461,13 @@
                                                       [self restSwitchChanged:self.restEnabledSwitch];
                                                       [self takeOffButtonPressed:nil];
                                                       NSURL *url = [NSURL URLWithString:@"https://flight-services.bp-3cloud.com/confirmed"];
-                                                      NSURLRequest *request = [NSURLRequest requestWithURL:url];
-                                                      [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
+                                                      // TODO: Check this
+                                                      //NSURLRequest *request = [NSURLRequest requestWithURL:url];
+                                                      //[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
+                                                      NSURLSessionDataTask *confirmTask = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                                                          // Do Nothing :)
+                                                      }];
+                                                      [confirmTask resume];
                                                   }
                                               }
 
@@ -494,8 +479,13 @@
 
 -(void) confirmLanding {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://flight-services.bp-3cloud.com/landingConfirmed/%@", self.pid]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
+    // TODO: Check this
+    //NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    //[NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:nil];
+    NSURLSessionDataTask *confirmLandingTask = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        // Do Nothing :)
+    }];
+    [confirmLandingTask resume];
 }
 
 - (IBAction)restSwitchChanged:(UISwitch *)sender {
@@ -518,13 +508,11 @@
                                                   options:PHImageRequestOptionsVersionCurrent
                                             resultHandler:^(UIImage *result, NSDictionary *info) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            // convert image to NSData
+            // Convert image from NSData to UIImage of a JPEG
             NSData *dataImage = UIImageJPEGRepresentation(downloadImage, 100.0f);
             [[self droneImage] setImage:downloadImage];
-            // set your URL Where to Upload Image
+            // Sets the image upload URL and filename
             NSString *urlString = @"https://flight-services.bp-3cloud.com/img";
-            
-            // set your Image Name
             NSString *filename = @"INSPECTIONIMG1";
             
             // Create 'POST' MutableRequest with Data and Other Image Attachment.

@@ -38,10 +38,10 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Stripes.png" translatesAutoresizingMaskIntoConstraints="NO" id="B8A-lI-875">
-                                        <rect key="frame" x="428" y="0.0" width="239" height="80"/>
+                                    <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Stripes.png" translatesAutoresizingMaskIntoConstraints="NO" id="B8A-lI-875">
+                                        <rect key="frame" x="417" y="0.0" width="230" height="80"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="B8A-lI-875" secondAttribute="height" multiplier="239:80" id="1wV-qw-W0w"/>
+                                            <constraint firstAttribute="width" secondItem="B8A-lI-875" secondAttribute="height" multiplier="230:80" id="1wV-qw-W0w"/>
                                             <constraint firstAttribute="height" constant="80" id="Mew-ft-IhQ"/>
                                         </constraints>
                                     </imageView>
@@ -56,7 +56,7 @@
                                     <constraint firstItem="274-Ab-YZ1" firstAttribute="top" secondItem="MZS-Pz-APa" secondAttribute="bottom" constant="12" id="Y9X-FN-kdM"/>
                                     <constraint firstItem="B8A-lI-875" firstAttribute="top" secondItem="xnO-fE-TAI" secondAttribute="top" id="ZHn-a8-iFx"/>
                                     <constraint firstItem="MZS-Pz-APa" firstAttribute="top" secondItem="xnO-fE-TAI" secondAttribute="top" constant="8" id="hrU-dB-tEX"/>
-                                    <constraint firstAttribute="trailing" secondItem="B8A-lI-875" secondAttribute="trailing" id="wOA-Hf-fNo"/>
+                                    <constraint firstAttribute="trailing" secondItem="B8A-lI-875" secondAttribute="trailing" constant="20" id="wOA-Hf-fNo"/>
                                     <constraint firstItem="MZS-Pz-APa" firstAttribute="leading" secondItem="xnO-fE-TAI" secondAttribute="leading" constant="32" id="wmR-vW-N5T"/>
                                 </constraints>
                             </view>
